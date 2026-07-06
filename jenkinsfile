@@ -7,7 +7,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/YOUR_GITHUB_USERNAME/hello-world-cicd.git'
+                url: 'https://github.com/shannu112/hello-world-cicd.git'
             }
         }
 
@@ -16,14 +16,14 @@ pipeline {
 
                 sh '''
 
-                ssh root@YOUR_SERVER_IP "
-                sudo rm -rf /var/www/jenkins/*
+                ssh deploy@192.168.1.35 "
+                sudo rm -rf /var/www/html/*
                 "
 
-                scp index.html root@YOUR_SERVER_IP:/tmp/
+                scp index.html deploy@192.168.1.35:/tmp/
 
-                ssh root@YOUR_SERVER_IP "
-                sudo mv /tmp/index.html /var/www/jenkins/
+                ssh deploy@192.168.1.35 "
+                sudo mv /tmp/index.html /var/www/html/
                 "
 
                 '''
