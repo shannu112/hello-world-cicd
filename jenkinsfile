@@ -1,0 +1,35 @@
+pipeline {
+
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/YOUR_GITHUB_USERNAME/hello-world-cicd.git'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+
+                sh '''
+
+                ssh root@YOUR_SERVER_IP "
+                sudo rm -rf /var/www/jenkins/*
+                "
+
+                scp index.html root@YOUR_SERVER_IP:/tmp/
+
+                ssh root@YOUR_SERVER_IP "
+                sudo mv /tmp/index.html /var/www/jenkins/
+                "
+
+                '''
+            }
+        }
+
+    }
+
+}
