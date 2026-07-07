@@ -68,9 +68,9 @@ pipeline {
 
                 docker pull $IMAGE:latest
 
-                docker compose down
+                docker-compose down
 
-                docker compose up -d
+                docker-compose up -d
 
                 "
 
