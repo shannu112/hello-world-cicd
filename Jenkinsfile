@@ -2,32 +2,82 @@ pipeline {
 
     agent any
 
+    environment {
+
+        IMAGE="shanmugha/hello-world"
+
+    }
+
     stages {
 
-        stage('Checkout') {
+        stage('Build') {
+
             steps {
-                git branch: 'main',
-                url: 'https://github.com/shannu112/hello-world-cicd.git'
+
+                sh '''
+
+                docker build -t $IMAGE:latest .
+
+                '''
             }
+
+        }
+
+        stage('Login') {
+
+            steps {
+
+                withCredentials([usernamePassword(credentialsId: 'dockerhub',
+
+                usernameVariable: 'USER',
+
+                passwordVariable: 'PASS')]) {
+
+                sh '''
+
+                echo $PASS | docker login -u $USER --password-stdin
+
+                '''
+
+                }
+
+            }
+
+        }
+
+        stage('Push') {
+
+            steps {
+
+                sh '''
+
+                docker push $IMAGE:latest
+
+                '''
+            }
+
         }
 
         stage('Deploy') {
+
             steps {
 
                 sh '''
 
                 ssh deploy@192.168.1.35 "
-                sudo rm -rf /var/www/html/*
-                "
 
-                scp index.html deploy@192.168.1.35:/tmp/
+                docker pull $IMAGE:latest
 
-                ssh deploy@192.168.1.35 "
-                sudo mv /tmp/index.html /var/www/html/
+                docker compose down
+
+                docker compose up -d
+
                 "
 
                 '''
+
             }
+
         }
 
     }

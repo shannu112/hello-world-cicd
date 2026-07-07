@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+
+  hello-world:
+
+    image: hello-world-cicd:latest
+
+    container_name: hello-world
+
+    restart: always
+
+    ports:
+      - "80:80"
