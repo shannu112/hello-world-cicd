@@ -65,7 +65,7 @@ pipeline {
                 sh '''
 
                 ssh deploy@192.168.1.35 "
-
+                /opt/hello-world/docker-compose.yml
                 docker pull $IMAGE:latest
 
                 docker-compose down
